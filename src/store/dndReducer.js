@@ -222,7 +222,7 @@ const initialState = {
       text1: "End any iteration/repeat/loop",
       isIcon: "",
       text2: "",
-      color: "bg-green-500",
+      color: "bg-pink-600",
       originalId: "event-13",
     },
   },
@@ -315,8 +315,6 @@ const dndSlice = createSlice({
 
         state.columns = { ...state.columns, [newColumn.id]: newColumn };
       } else {
-        
-
         let background = "";
 
         switch (source.droppableId) {
@@ -357,8 +355,6 @@ const dndSlice = createSlice({
         state.columns[newFinish.id] = newFinish;
         state.isCompiled = false;
       }
-
-      
     },
     normalShift: (state, { payload }) => {
       const { source, destination, draggableId } = payload;
@@ -405,8 +401,7 @@ const dndSlice = createSlice({
     addNewThread: (state, { payload }) => {
       let totalThreads = state.midAreaThreads.length;
       const newThreadId = "thread" + +totalThreads;
-      
-      
+
       state.columns = {
         ...state.columns,
         [newThreadId]: {
@@ -441,7 +436,6 @@ const dndSlice = createSlice({
       state.isCompiled = false;
     },
     updateInputValue: (state, { payload }) => {
-      
       const { commandId, inputValue1, inputValue2 } = payload;
       if (inputValue1 !== undefined)
         state.commands[commandId].inputValue1 = inputValue1;
