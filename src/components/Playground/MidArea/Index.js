@@ -7,16 +7,14 @@ import { useDispatch } from "react-redux";
 import { addNewThread, clearGarbage } from "../../../store/dndReducer";
 
 export default function MidArea() {
-  const { midAreaThreads, columns, commands } = useSelector(
-    (state) => state.dnd
-  );
+  const { midAreaThreads, columns, commands } = useSelector(state => state.dnd);
 
   const dispatch = useDispatch();
   const addNewThreadHandler = () => {
     dispatch(addNewThread());
   };
 
-  // console.log({ gar: columns.garbage.commandIds.length });
+  
   const length = columns?.garbage?.commandIds?.length;
 
   useEffect(() => {
@@ -53,7 +51,7 @@ export default function MidArea() {
                   {commandIds.map((ids, index) => {
                     const command = commands[ids];
 
-                    console.log(command);
+                    
 
                     return (
                       <div key={command.id}>

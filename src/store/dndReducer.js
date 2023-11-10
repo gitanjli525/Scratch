@@ -21,6 +21,17 @@ const initialState = {
       inputValue1: "100",
       inputValueType1: "number",
     },
+    "event-100": {
+      id: "event-100",
+      content: "moveForward",
+      text1: "Move",
+      iconName: "",
+      text2: "steps right",
+      inputValue1: "100",
+      inputValueType1: "number",
+      color: "bg-blue-500",
+      originalId: "event-1",
+    },
     "event-101": {
       id: "event-101",
       content: "moveUp",
@@ -38,6 +49,17 @@ const initialState = {
       text2: "steps left",
       inputValue1: "100",
       inputValueType1: "number",
+    },
+    "event-1020": {
+      id: "event-1020",
+      content: "moveBackward",
+      text1: "Move",
+      iconName: "",
+      text2: "steps left",
+      inputValue1: "100",
+      inputValueType1: "number",
+      color: "bg-blue-500",
+      originalId: "event-102",
     },
     "event-2": {
       id: "event-2",
@@ -65,6 +87,15 @@ const initialState = {
       isIcon: "play",
       text2: " Clicked",
     },
+    "event-41": {
+      id: "event-41",
+      content: "When PLAY clicked",
+      text1: "When ",
+      isIcon: "play",
+      text2: " Clicked",
+      color: "bg-yellow-500",
+      originalId: "event-4",
+    },
     "event-5": {
       id: "event-5",
       content: "When KEY pressed",
@@ -89,10 +120,24 @@ const initialState = {
       isIcon: "",
       text2: " for",
       text3: "seconds",
-      inputValue1: "Hello",
+      inputValue1: "Welcome",
       inputValue2: 2,
       inputValueType1: "text",
       inputValueType2: "number",
+    },
+    "event-71": {
+      id: "event-71",
+      content: "say",
+      text1: "Say",
+      isIcon: "",
+      text2: " for",
+      text3: "seconds",
+      inputValue1: "Welcome",
+      inputValue2: 2,
+      inputValueType1: "text",
+      inputValueType2: "number",
+      color: "bg-green-500",
+      originalId: "event-7",
     },
     "event-8": {
       id: "event-8",
@@ -115,6 +160,20 @@ const initialState = {
       inputValueType1: "text",
       inputValueType2: "number",
     },
+    "event-91": {
+      id: "event-91",
+      content: "say",
+      text1: "think",
+      isIcon: "",
+      text2: " for",
+      text3: "seconds",
+      inputValue1: "HMMMM",
+      inputValue2: 2,
+      inputValueType1: "text",
+      inputValueType2: "number",
+      color: "bg-blue-500",
+      originalId: "event-9",
+    },
     // ! CONTROLS of sprite ****************************
     "event-10": {
       id: "event-10",
@@ -133,6 +192,16 @@ const initialState = {
       inputValue1: 10,
       inputValueType1: "number",
     },
+    "event-111": {
+      id: "event-111",
+      content: "repeat",
+      text1: "Repeat",
+      isIcon: "",
+      inputValue1: 10,
+      inputValueType1: "number",
+      color: "bg-pink-600",
+      originalId: "event-11",
+    },
     "event-12": {
       id: "event-12",
       content: "infiniteLoop",
@@ -146,6 +215,15 @@ const initialState = {
       text1: "End any iteration/repeat/loop",
       isIcon: "",
       text2: "",
+    },
+    "event-131": {
+      id: "event-131",
+      content: "end",
+      text1: "End any iteration/repeat/loop",
+      isIcon: "",
+      text2: "",
+      color: "bg-green-500",
+      originalId: "event-13",
     },
   },
   columns: {
@@ -179,7 +257,15 @@ const initialState = {
     thread1: {
       id: "thread1",
       title: "Thread",
-      commandIds: [],
+      commandIds: [
+        "event-41",
+        "event-71",
+        "event-111",
+        "event-100",
+        "event-91",
+        "event-1020",
+        "event-131",
+      ],
     },
     thread2: {
       id: "thread2",
@@ -229,7 +315,7 @@ const dndSlice = createSlice({
 
         state.columns = { ...state.columns, [newColumn.id]: newColumn };
       } else {
-        // console.log("making interchange");
+        
 
         let background = "";
 
@@ -272,7 +358,7 @@ const dndSlice = createSlice({
         state.isCompiled = false;
       }
 
-      // console.log({ source, destination, draggableId });
+      
     },
     normalShift: (state, { payload }) => {
       const { source, destination, draggableId } = payload;
@@ -319,8 +405,8 @@ const dndSlice = createSlice({
     addNewThread: (state, { payload }) => {
       let totalThreads = state.midAreaThreads.length;
       const newThreadId = "thread" + +totalThreads;
-      // console.log("adding");
-      // console.log({ totalThreads, newThreadId });
+      
+      
       state.columns = {
         ...state.columns,
         [newThreadId]: {
@@ -332,7 +418,7 @@ const dndSlice = createSlice({
       state.midAreaThreads = [...state.midAreaThreads, newThreadId];
       state.isCompiled = false;
     },
-    clearGarbage: (state) => {
+    clearGarbage: state => {
       const newState = { ...current(state) };
       const columns = { ...newState.columns };
       const garbageEvents = columns?.garbage?.commandIds;
@@ -355,7 +441,7 @@ const dndSlice = createSlice({
       state.isCompiled = false;
     },
     updateInputValue: (state, { payload }) => {
-      console.log({ payload });
+      
       const { commandId, inputValue1, inputValue2 } = payload;
       if (inputValue1 !== undefined)
         state.commands[commandId].inputValue1 = inputValue1;
@@ -365,10 +451,10 @@ const dndSlice = createSlice({
 
       state.isCompiled = false;
     },
-    setIsCompiled: (state) => {
+    setIsCompiled: state => {
       state.isCompiled = true;
     },
-    resetDND: (state) => {
+    resetDND: state => {
       return initialState;
     },
     // Other actions here

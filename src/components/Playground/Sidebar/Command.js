@@ -6,19 +6,11 @@ import {
   updateDropDownEventValue,
   updateInputValue,
 } from "../../../store/dndReducer";
-// const Container = styled.div`
-//   border: 1px solid lightgrey;
-//   border-radius: 2px;
-//   padding: 8px;
-//   margin-bottom: 8px;
-//   background-color: ${(props) => (props.isDragging ? "lightgreen" : "white")};
-// `;
 
-const Command = (props) => {
+const Command = props => {
   const dispatch = useDispatch();
 
-  const handleOptionChange = (event) => {
-    console.log("updating");
+  const handleOptionChange = event => {
     const payload = { value: event.target.value, commandId: props.command.id };
     dispatch(updateDropDownEventValue(payload));
   };
@@ -48,7 +40,7 @@ const Command = (props) => {
                 className="w-16  mx-2 bg-black text-center"
                 id={props.command.id}
                 value={props.command.inputValue1}
-                onChange={(event) => {
+                onChange={event => {
                   handleInputChange(event.target.value, "inputValue1");
                 }}
                 pattern={
@@ -72,7 +64,7 @@ const Command = (props) => {
                 className="bg-yellow-700 h-6 text-center"
                 onChange={handleOptionChange}
               >
-                {props.command.options.map((val) => (
+                {props.command.options.map(val => (
                   <option value={val} key={val}>
                     {val}
                   </option>
@@ -93,7 +85,7 @@ const Command = (props) => {
                 className="w-16 mx-2 bg-black text-center"
                 id={props.command.id}
                 value={props.command.inputValue2}
-                onChange={(event) => {
+                onChange={event => {
                   handleInputChange(event.target.value, "inputValue2");
                 }}
                 pattern={

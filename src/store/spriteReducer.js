@@ -52,12 +52,10 @@ const spriteSlice = createSlice({
   initialState,
   reducers: {
     compileScripts: (state, { payload }) => {
-      // console.log({ source, destination, draggableId });
       const { threadId, eventId, eventValue } = payload;
-      console.log({ payload });
+
       const newState = current(state);
       if (eventId === "event-5") {
-        console.log("second way");
         state.events[eventId][eventValue].subscribedThreads = [
           ...state.events[eventId][eventValue].subscribedThreads,
           threadId,
@@ -72,22 +70,22 @@ const spriteSlice = createSlice({
     resetScripts: () => {
       return initialState;
     },
-    moveForward: (state) => {
+    moveForward: state => {
       state.left += 1;
     },
-    moveDown: (state) => {
+    moveDown: state => {
       state.top += 1;
     },
-    moveUp: (state) => {
+    moveUp: state => {
       state.top -= 1;
     },
-    moveBack: (state) => {
+    moveBack: state => {
       state.left -= 1;
     },
-    rotateClockWise: (state) => {
+    rotateClockWise: state => {
       state.rotation += 1;
     },
-    rotateAntiClockWise: (state) => {
+    rotateAntiClockWise: state => {
       let newRotation = state.rotation - 1;
       if (newRotation < 0) state.rotation = 360 + newRotation;
       else state.rotation = newRotation;

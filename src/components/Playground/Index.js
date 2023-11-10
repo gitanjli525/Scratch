@@ -8,10 +8,10 @@ import { useDispatch } from "react-redux";
 import { normalShift, sourceShift } from "../../store/dndReducer";
 
 const PlayGround = () => {
-  const { columns, columnOrder, commands } = useSelector((state) => state.dnd);
+  const { columns, columnOrder, commands } = useSelector(state => state.dnd);
   const dispatch = useDispatch();
 
-  const onDragEnd = (result) => {
+  const onDragEnd = result => {
     const { destination, source, draggableId } = result;
 
     if (!destination) {
@@ -24,8 +24,6 @@ const PlayGround = () => {
     ) {
       return;
     }
-    // console.log(columnOrder);
-    // console.log({ destination, source, draggableId });
 
     // stopping them from moving from one COMMAND source into another COMMAND source
     if (
@@ -33,12 +31,8 @@ const PlayGround = () => {
       columnOrder.indexOf(source.droppableId) !== -1 &&
       destination.droppableId !== source.droppableId
     ) {
-      // console.log("blocked");
       return;
     }
-
-    // console.log({ columnOrder, draggableId });
-    // console.log(columnOrder.indexOf(source.droppableId));
 
     // STOP ->Mid Area THREAD to  Side Bar SOURCE transfer
     if (
@@ -46,13 +40,12 @@ const PlayGround = () => {
       columnOrder.indexOf(source.droppableId) === -1 &&
       destination.droppableId !== source.droppableId
     ) {
-      console.log("blocked");
       return;
     }
 
     if (columnOrder.indexOf(source.droppableId) !== -1) {
       // transferring from SOURCE to any MID AREA thread
-      console.log("Transferring");
+
       const newCommandId = createNewCommandId(draggableId, commands);
       dispatch(sourceShift({ source, destination, draggableId, newCommandId }));
       return;

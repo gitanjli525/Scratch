@@ -9,14 +9,12 @@ export function generateRandomCharacter() {
 
 export const createNewCommandId = (originalId, commands) => {
   const allCommandIds = Object.keys(commands);
-  // console.log("all command ids", allCommandIds);
-  let newId = originalId;
 
-  // console.log({ newId });
+  let newId = originalId;
 
   while (
     newId === originalId ||
-    allCommandIds.find((str) => str === newId) !== undefined
+    allCommandIds.find(str => str === newId) !== undefined
   ) {
     newId = newId + `${generateRandomCharacter()}`;
   }
@@ -36,7 +34,7 @@ export function removeKeys(obj, keysToRemove) {
   const updatedObject = { ...obj };
 
   // Loop through the keys to remove
-  keysToRemove.forEach((key) => {
+  keysToRemove.forEach(key => {
     // Check if the key exists in the object, then delete it
     if (key in updatedObject) {
       delete updatedObject[key];
@@ -46,7 +44,7 @@ export function removeKeys(obj, keysToRemove) {
   return updatedObject;
 }
 
-export const findPressedKeyEventType = (key) => {
+export const findPressedKeyEventType = key => {
   switch (key) {
     case " ":
       return "space";

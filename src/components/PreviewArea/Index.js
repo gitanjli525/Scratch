@@ -29,36 +29,30 @@ export default function PreviewArea() {
   const [stopSize, setStopSize] = useState(25);
   const [equalsSize, setEqualsSize] = useState(25);
 
-  const { midAreaThreads, columns, commands } = useSelector(
-    (state) => state.dnd
-  );
+  const { midAreaThreads, columns, commands } = useSelector(state => state.dnd);
 
   const { left, top, rotation, events, speaking } = useSelector(
-    (state) => state.sprite
+    state => state.sprite
   );
   const dispatch = useDispatch();
 
   const equalClickHandler = () => {
     dispatch(resetScripts());
-    midAreaThreads.forEach((threadId) => {
+    midAreaThreads.forEach(threadId => {
       if (threadId !== "garbage") {
-        console.log({ threadId });
         const threadCommands = [...columns[threadId].commandIds];
 
         // if thread is empty
         if (threadCommands.length === 0) return;
-        console.log({ first: threadCommands[0] });
+
         const command = commands[threadCommands[0]];
         const originalId = command.originalId;
 
-        console.log({ originalId });
         if (
           originalId !== undefined &&
-          columns.events.commandIds.findIndex(
-            (event) => event === originalId
-          ) !== -1
+          columns.events.commandIds.findIndex(event => event === originalId) !==
+            -1
         ) {
-          console.log("dispatching", originalId);
           dispatch(setIsCompiled());
           dispatch(
             compileScripts({
@@ -68,8 +62,6 @@ export default function PreviewArea() {
             })
           );
         } else {
-          console.log({ originalId, events: columns.events.commandIds });
-          console.log(originalId in columns.events.commandIds);
         }
       }
     });
@@ -84,7 +76,6 @@ export default function PreviewArea() {
   ) => {
     switch (command.content) {
       case "moveDown":
-        console.log("move Down start", startTime);
         for (let i = 0; i < +command.inputValue1; i++) {
           setTimeout(() => {
             dispatch(moveDown());
@@ -94,7 +85,6 @@ export default function PreviewArea() {
         return startTime + 3 * +command.inputValue1;
 
       case "moveForward":
-        console.log("move forward", startTime);
         for (let i = 0; i < +command.inputValue1; i++) {
           setTimeout(() => {
             dispatch(moveForward());
@@ -104,7 +94,6 @@ export default function PreviewArea() {
         return startTime + 3 * +command.inputValue1;
 
       case "moveBackward":
-        console.log("move backward", startTime);
         for (let i = 0; i < +command.inputValue1; i++) {
           setTimeout(() => {
             dispatch(moveBack());
@@ -114,7 +103,6 @@ export default function PreviewArea() {
         return startTime + 3 * +command.inputValue1;
 
       case "moveUp":
-        console.log("move up start", startTime);
         for (let i = 0; i < +command.inputValue1; i++) {
           setTimeout(() => {
             dispatch(moveUp());
@@ -163,7 +151,6 @@ export default function PreviewArea() {
           commandId: command.id,
           repeatNumber: command.inputValue1 - 1,
         });
-        console.log({ stack });
 
         return startTime;
 
@@ -174,20 +161,15 @@ export default function PreviewArea() {
           commandId: command.id,
           repeatNumber: 999,
         });
-        console.log({ stack });
 
         return startTime;
 
       case "end":
-        console.log({ stack });
         let endIndex = index;
         if (stack.length > 0) {
           const { startIndex, commandId, repeatNumber } =
             stack[stack.length - 1];
 
-          console.log("detail:", stack[stack.length - 1]);
-
-          console.log("starting loop", startTime);
           startTime = executeAllCommands(
             allCommandIds,
             startIndex + 1,
@@ -203,7 +185,6 @@ export default function PreviewArea() {
         return startTime;
 
       default:
-        console.log("start time", startTime);
         return startTime + 0;
     }
   };
@@ -217,7 +198,6 @@ export default function PreviewArea() {
     stack = []
   ) => {
     // const stack = [];
-    console.log({ stack });
 
     if (
       startIndex < endIndex &&
@@ -225,16 +205,11 @@ export default function PreviewArea() {
       endIndex !== 0 &&
       iteration !== 0
     ) {
-      console.log("starting loop", startTime);
       for (let count = 0; count < iteration; count++) {
-        console.log("count:", count);
         for (let i = startIndex; i <= endIndex; i++) {
-          console.log("index:", i);
-          console.log(allCommandIds[i]);
-          console.log("start time", startTime);
           const commandId = allCommandIds[i];
           const command = commands[commandId];
-          console.log({ allCommandIds, command });
+
           startTime = executeCommand(
             allCommandIds,
             command,
@@ -242,7 +217,6 @@ export default function PreviewArea() {
             i,
             stack
           );
-          console.log("recieved time", startTime);
         }
       }
       return startTime;
@@ -252,7 +226,6 @@ export default function PreviewArea() {
         const repeatNumber = 0;
         const startIndex = 0;
 
-        console.log("now doing", command.content);
         startTime = executeCommand(
           allCommandIds,
           command,
@@ -260,286 +233,45 @@ export default function PreviewArea() {
           index,
           stack
         );
-        console.log("time recieved", startTime);
 
         return startTime;
-        // switch (command.content) {
-        //   case "moveDown":
-        //     console.log("move Down start", startTime);
-        //     for (let i = 0; i < +command.inputValue1; i++) {
-        //       setTimeout(() => {
-        //         dispatch(moveDown());
-        //       }, startTime + 3 * i);
-        //     }
-
-        //     startTime += 3 * +command.inputValue1;
-
-        //     break;
-        //   case "moveForward":
-        //     console.log("move forward", startTime);
-        //     for (let i = 0; i < +command.inputValue1; i++) {
-        //       setTimeout(() => {
-        //         dispatch(moveForward());
-        //       }, startTime + 3 * i);
-        //     }
-
-        //     startTime += 3 * +command.inputValue1;
-        //     break;
-
-        //   case "moveBackward":
-        //     console.log("move backward", startTime);
-        //     for (let i = 0; i < +command.inputValue1; i++) {
-        //       setTimeout(() => {
-        //         dispatch(moveBack());
-        //       }, startTime + 3 * i);
-        //     }
-
-        //     startTime += 3 * +command.inputValue1;
-        //     break;
-
-        //   case "moveUp":
-        //     console.log("move up start", startTime);
-        //     for (let i = 0; i < +command.inputValue1; i++) {
-        //       setTimeout(() => {
-        //         dispatch(moveUp());
-        //       }, startTime + 3 * i);
-        //     }
-
-        //     startTime += 3 * +command.inputValue1;
-        //     break;
-
-        //   case "rotateClockWise":
-        //     for (let i = 0; i < +command.inputValue1; i++) {
-        //       setTimeout(() => {
-        //         dispatch(rotateClockWise());
-        //       }, startTime + 3 * i);
-        //     }
-
-        //     startTime += 3 * +command.inputValue1 + 100;
-        //     break;
-
-        //   case "rotateAntiClockWise":
-        //     for (let i = 0; i < +command.inputValue1; i++) {
-        //       setTimeout(() => {
-        //         dispatch(rotateAntiClockWise());
-        //       }, startTime + 3 * i);
-        //     }
-
-        //     startTime += 3 * +command.inputValue1 + 100;
-        //     break;
-
-        //   case "say":
-        //     let time = command.inputValue2 !== undefined ? 1 : inputValue2;
-        //     setTimeout(() => {
-        //       dispatch(speak({ message: command.inputValue1 }));
-        //     }, startTime);
-
-        //     setTimeout(() => {
-        //       dispatch(speak({ message: "" }));
-        //     }, startTime + time * 1000);
-
-        //     startTime += time * 1000 + 100;
-        //     break;
-
-        //   case "wait":
-        //     startTime += +command.inputValue1 * 1000;
-        //     break;
-
-        //   case "repeat":
-        //     let startIndex = index;
-        //     stack.push({
-        //       startIndex,
-        //       commandId,
-        //       repeatNumber: command.inputValue1 - 1,
-        //     });
-
-        //     break;
-
-        //   case "end":
-        //     let endIndex = index;
-        //     if (stack.length > 0) {
-        //       const { startIndex, commandId, repeatNumber } =
-        //         stack[stack.length - 1];
-        //       executeAllCommands(
-        //         allCommandIds,
-        //         startIndex + 1,
-        //         endIndex - 1,
-        //         repeatNumber
-        //       );
-
-        //       stack.pop();
-        //     }
-
-        //     break;
-        // }
       });
     }
   };
 
-  const executeThreads = (subscribedThreads) => {
-    subscribedThreads.forEach((threadId) => {
-      console.log({ threadId });
+  const executeThreads = subscribedThreads => {
+    subscribedThreads.forEach(threadId => {
       const { commandIds: allCommandIds } = columns[threadId];
-      console.log({ allCommandIds, threadId });
 
       let startTime = 0;
       executeAllCommands(allCommandIds);
-
-      // allCommandIds.forEach((commandId, index) => {
-      //   const command = commands[commandId];
-      //   const repeatNumber = 0;
-      //   const startIndex = 0;
-
-      //   console.log("now doing", command);
-      //   // startTime = executeCommand(command);
-      //   switch (command.content) {
-      //     case "moveDown":
-      //       console.log("move Down start", startTime);
-      //       for (let i = 0; i < +command.inputValue1; i++) {
-      //         setTimeout(() => {
-      //           dispatch(moveDown());
-      //         }, startTime + 3 * i);
-      //       }
-
-      //       startTime += 3 * +command.inputValue1;
-
-      //       break;
-      //     case "moveForward":
-      //       console.log("move forward", startTime);
-      //       for (let i = 0; i < +command.inputValue1; i++) {
-      //         setTimeout(() => {
-      //           dispatch(moveForward());
-      //         }, startTime + 3 * i);
-      //       }
-
-      //       startTime += 3 * +command.inputValue1;
-      //       break;
-
-      //     case "moveBackward":
-      //       console.log("move backward", startTime);
-      //       for (let i = 0; i < +command.inputValue1; i++) {
-      //         setTimeout(() => {
-      //           dispatch(moveBack());
-      //         }, startTime + 3 * i);
-      //       }
-
-      //       startTime += 3 * +command.inputValue1;
-      //       break;
-
-      //     case "moveUp":
-      //       console.log("move up start", startTime);
-      //       for (let i = 0; i < +command.inputValue1; i++) {
-      //         setTimeout(() => {
-      //           dispatch(moveUp());
-      //         }, startTime + 3 * i);
-      //       }
-
-      //       startTime += 3 * +command.inputValue1;
-      //       break;
-
-      //     case "rotateClockWise":
-      //       for (let i = 0; i < +command.inputValue1; i++) {
-      //         setTimeout(() => {
-      //           dispatch(rotateClockWise());
-      //         }, startTime + 3 * i);
-      //       }
-
-      //       startTime += 3 * +command.inputValue1 + 100;
-      //       break;
-
-      //     case "rotateAntiClockWise":
-      //       for (let i = 0; i < +command.inputValue1; i++) {
-      //         setTimeout(() => {
-      //           dispatch(rotateAntiClockWise());
-      //         }, startTime + 3 * i);
-      //       }
-
-      //       startTime += 3 * +command.inputValue1 + 100;
-      //       break;
-
-      //     case "say":
-      //       let time = command.inputValue2 !== undefined ? 1 : inputValue2;
-      //       setTimeout(() => {
-      //         dispatch(speak({ message: command.inputValue1 }));
-      //       }, startTime);
-
-      //       setTimeout(() => {
-      //         dispatch(speak({ message: "" }));
-      //       }, startTime + time * 1000);
-
-      //       startTime += time * 1000 + 100;
-      //       break;
-
-      //     case "wait":
-      //       startTime += +command.inputValue1 * 1000;
-      //       break;
-      //   }
-      // });
     });
   };
 
   const playClickHandler = () => {
     const { subscribedThreads } = events["event-4"];
-    console.log({ subscribedThreads });
+
     executeThreads(subscribedThreads);
-
-    // subscribedThreads.forEach((threadId) => {
-    //   const { commandIds: allCommandIds } = columns[threadId];
-    //   console.log({ allCommandIds, threadId });
-
-    //   let startTime = 0;
-
-    //   allCommandIds.forEach((commandId) => {
-    //     const command = commands[commandId];
-    //     console.log("now doing", command);
-    //     switch (command.content) {
-    //       case "moveDown":
-    //         for (let i = 0; i < +command.inputValue1; i++) {
-    //           setTimeout(() => {
-    //             dispatch(moveDown({ value: command.inputValue1 }));
-    //           }, startTime + 3 * i);
-    //         }
-
-    //         startTime = 3 * +command.inputValue1;
-
-    //         break;
-    //       case "moveForward":
-    //         for (let i = 0; i < +command.inputValue1; i++) {
-    //           setTimeout(() => {
-    //             dispatch(moveForward({ value: command.inputValue1 }));
-    //           }, startTime + 3 * i);
-    //         }
-
-    //         startTime = 3 * +command.inputValue1;
-    //         break;
-    //     }
-    //   });
-    // });
   };
 
   const spriteClickHandler = () => {
     const { subscribedThreads } = events["event-6"];
-    console.log({ subscribedThreads });
+
     executeThreads(subscribedThreads);
   };
-  // console.log({ events });
 
   const onKeyPress = (key, events) => {
-    console.log("Key pressed:", key);
     const eventType = findPressedKeyEventType(key);
 
     if (eventType !== undefined) {
-      console.log("Event triggered", eventType);
-      // console.log({ events });
-      console.log("myevent ", events["event-5"]);
       const { subscribedThreads } = events["event-5"][eventType];
-      console.log({ subscribedThreads });
+
       executeThreads(subscribedThreads);
     }
   };
 
   useEffect(() => {
-    const handleKeyPress = (event) => {
+    const handleKeyPress = event => {
       onKeyPress(event.key, events);
       // Do something based on the key press
     };
