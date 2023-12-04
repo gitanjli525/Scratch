@@ -77,7 +77,7 @@ const initialState = {
       inputValue1: 10,
       inputValueType1: "number",
       isIcon: "redo",
-      text2: " 15 degrees",
+      text2: "degrees",
     },
     // ! EVENTS of sprite ****************************
     "event-4": {
